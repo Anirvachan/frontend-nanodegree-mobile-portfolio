@@ -383,7 +383,6 @@ var pizzaElementGenerator = function(i) {
   pizzaImageContainer.appendChild(pizzaImage);
   pizzaContainer.appendChild(pizzaImageContainer);
 
-
   pizzaDescriptionContainer.classList.add("col-md-6");
 
   pizzaName = document.createElement("h4");
@@ -422,9 +421,10 @@ var resizePizzas = function(size) {
   changeSliderLabel(size);
 
    // Returns the size difference to change a pizza element from one size to another. Called by changePizzaSlices(size).
+  
   function determineDx (elem, size) {
-    var oldWidth = elem.offsetWidth;
     var windowWidth = document.querySelector("#randomPizzas").offsetWidth;
+    var oldWidth = elem.offsetWidth;
     var oldSize = oldWidth / windowWidth;
 
     // Optional TODO: change to 3 sizes? no more xl?
@@ -450,10 +450,18 @@ var resizePizzas = function(size) {
 
   // Iterates through pizza elements on the page and changes their widths
   function changePizzaSizes(size) {
-    for (var i = 0; i < document.querySelectorAll(".randomPizzaContainer").length; i++) {
-      var dx = determineDx(document.querySelectorAll(".randomPizzaContainer")[i], size);
-      var newwidth = (document.querySelectorAll(".randomPizzaContainer")[i].offsetWidth + dx) + 'px';
-      document.querySelectorAll(".randomPizzaContainer")[i].style.width = newwidth;
+
+    //Optimization: Replaced querySelectorAll by getElementsByClassName,
+    // and put it outside of the for loop. in randomPizzaContainer
+
+    //Since dx and pizza widths are the same for every pizza, they were moved outside the for loop.
+    //This eliminated Forced synchronous layout (which happens while modifying styles repeatedly, after laying them out.)
+    var randomPizzaContainer = document.getElementsByClassName("randomPizzaContainer");
+    var dx = determineDx(randomPizzaContainer[0], size);
+    var newwidth = (randomPizzaContainer[0].offsetWidth + dx) + 'px';
+    for (var i = 0; i < randomPizzaContainer.length; i++) {
+
+      randomPizzaContainer[i].style.width = newwidth;
     }
   }
 
@@ -502,11 +510,30 @@ function updatePositions() {
   frame++;
   window.performance.mark("mark_start_frame");
 
-  var items = document.querySelectorAll('.mover');
-  for (var i = 0; i < items.length; i++) {
-    var phase = Math.sin((document.body.scrollTop / 1250) + (i % 5));
-    items[i].style.left = items[i].basicLeft + 100 * phase + 'px';
+  //optimization: Replace querySelectorAll  by getElementsByClassName in items variable.
+  var items = document.getElementsByClassName('mover');
+
+  //optimization: Moved document.body.scrollTop to a variable called scrollTop
+  //so that it won't have to be repeatedly accessed inside the for loop.
+  var scrollTop = document.body.scrollTop;
+
+  var phaseContainer = [];
+  //optimization: 5 phases are being repeatedly and unnecessarily calculated
+  //items.length times. Instead, we calculate them before hand and store them in phaseContainer.
+
+  for (var i = 0; i < 5; i++) {
+    phaseContainer.push(Math.sin((scrollTop / 1250) + i));
   }
+
+  for (var index=0; index<items.length; index++) {
+    var phase = phaseContainer[index%5];
+
+    //optimization: The pizzas while moving cause the entire page to be re-painted.
+    //To alleviate this, we move each pizza onto it's own layer.
+    items[index].style.transform = 'translateX(' + 500 * phase + 'px)';
+  }
+    console.log('translate',  100*phase);
+
 
   // User Timing API to the rescue again. Seriously, it's worth learning.
   // Super easy to create custom metrics.
@@ -525,7 +552,9 @@ window.addEventListener('scroll', updatePositions);
 document.addEventListener('DOMContentLoaded', function() {
   var cols = 8;
   var s = 256;
-  for (var i = 0; i < 200; i++) {
+  //optimization: 200 pizzas are clearly unnecessary. We see only ~24 pizzas on the screen at any
+  //given time.
+  for (var i = 0; i < 24; i++) {
     var elem = document.createElement('img');
     elem.className = 'mover';
     elem.src = "images/pizza.png";
