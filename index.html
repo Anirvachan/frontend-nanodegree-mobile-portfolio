@@ -69,10 +69,10 @@
     </footer>
 
     <script async>
-    //optimization: Analytics script has been moved to the bottom of //the page so that it won't block the DOM parser.
+    //optimization: Analytics script has been moved to the bottom of the page so that it won't block the DOM parser.
 
     //Async tag is unnecessary, though.
-    //Added it anyway. Wonder if that might be a problem? Feedback     // appreciated. :)
+    //Added it anyway. Wonder if that might be a problem? Feedback appreciated. :)
 
       (function(w,g){w['GoogleAnalyticsObject']=g;
       w[g]=w[g]||function(){(w[g].q=w[g].q||[]).push(arguments)};w[g].l=1*new Date();})(window,'ga');
@@ -83,7 +83,7 @@
     </script>
     <script async src="http://www.google-analytics.com/analytics.js"></script>
     <script >
-    //optimization: perfmatters.js minified and moved to the bottom of //the page so that it won't block parsing of the DOM.
+    //optimization: perfmatters.js minified and moved to the bottom of the page so that it won't block parsing of the DOM.
     function logCRP(){var o=window.performance.timing,n=o.domContentLoadedEventStart-o.domLoading,t=o.domComplete-o.domLoading,d=document.getElementById("crp-stats");d.textContent="DCL: "+n+"ms, onload: "+t+"ms"}window.addEventListener("load",function(o){logCRP()});</script>
 
 
