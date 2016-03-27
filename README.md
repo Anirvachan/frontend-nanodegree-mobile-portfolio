@@ -24,7 +24,7 @@ Some useful tips to help you get started:
 
 1. Copy the public URL ngrok gives you and try running it through PageSpeed Insights! Optional: [More on integrating ngrok, Grunt and PageSpeed.](http://www.jamescryer.com/2014/06/12/grunt-pagespeed-and-ngrok-locally-testing/)
 
-Optimizations made:
+#####Optimizations made:
 
 1. Web font was moved to the bottom to increase speed. 
 
@@ -42,10 +42,11 @@ To optimize views/pizza.html, you will need to modify views/js/main.js until you
 
 You might find the FPS Counter/HUD Display useful in Chrome developer tools described here: [Chrome Dev Tools tips-and-tricks](https://developer.chrome.com/devtools/docs/tips-and-tricks).
 
-Optimizations made:
+#####Optimizations made:
 1. Replaced querySelectorAll by getElementsByClassName, and put it outside of the for loop. in randomPizzaContainer
    Since dx and pizza widths are the same for every pizza, they were moved outside the for loop.
    This eliminated Forced synchronous layout (which happens while modifying styles repeatedly, after laying them out. 
+   
    ######Line 454
 
 2. Replace querySelectorAll  by getElementsByClassName in items variable. 
