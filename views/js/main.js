@@ -513,16 +513,16 @@ function updatePositions() {
   //optimization: Replace querySelectorAll  by getElementsByClassName in items variable.
   var items = document.getElementsByClassName('mover');
 
-  //optimization: Moved document.body.scrollTop to a variable called scrollTop
+  //optimization: Moved document.body.scrollTop / 1250 to a variable called scrollTop
   //so that it won't have to be repeatedly accessed inside the for loop.
-  var scrollTop = document.body.scrollTop;
+  var scrollTop = document.body.scrollTop / 1250;
 
   var phaseContainer = [];
   //optimization: 5 phases are being repeatedly and unnecessarily calculated
   //items.length times. Instead, we calculate them before hand and store them in phaseContainer.
 
   for (var i = 0; i < 5; i++) {
-    phaseContainer.push(Math.sin((scrollTop / 1250) + i));
+    phaseContainer.push(Math.sin((scrollTop) + i));
   }
 
   for (var index=0; index<items.length; index++) {
@@ -530,7 +530,7 @@ function updatePositions() {
 
     //optimization: The pizzas while moving cause the entire page to be re-painted.
     //To alleviate this, we move each pizza onto it's own layer.
-    items[index].style.transform = 'translateX(' + 500 * phase + 'px)';
+    items[index].style.transform = 'translateX(' + 100 * phase + 'px)';
   }
     console.log('translate',  100*phase);
 
@@ -560,7 +560,8 @@ document.addEventListener('DOMContentLoaded', function() {
     elem.src = "images/pizza.png";
     elem.style.height = "100px";
     elem.style.width = "73.333px";
-    elem.basicLeft = (i % cols) * s;
+    // items[index].style.transform = 'translateX(' + 100 * phase + 'px)';
+    elem.style.left = (i % cols) * s + 'px';
     elem.style.top = (Math.floor(i / cols) * s) + 'px';
     document.querySelector("#movingPizzas1").appendChild(elem);
   }
